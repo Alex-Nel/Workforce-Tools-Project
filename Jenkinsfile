@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "task-management-api"
         DB_PASSWORD = credentials('db-secret-password')
+        PATH = "/usr/local/bin:/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin:${env.PATH}"
     }
 
     stages {
@@ -49,7 +50,7 @@ pipeline {
         }
         always {
             echo "Cleaning up environment..."
-            sh 'docker compose down -v'
+            sh 'docker compose down -v || true'
         }
     }
 }
