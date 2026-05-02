@@ -3,54 +3,48 @@ pipeline {
 
     environment {
         IMAGE_NAME = "task-management-api"
-        DB_PASSWORD = credentials('db-secret-password')
-        PATH = "/usr/local/bin:/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin:${env.PATH}"
+        DB_PASSWORD = credentials('db-secret-password') 
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
-                echo "Code pulled successfully."
             }
         }
 
         stage('Build') {
             steps {
                 echo "Building Docker images..."
-                sh 'docker compose build --no-cache'
+                sh 'docker-compose build --no-cache'
             }
         }
 
         stage('Verify') {
             steps {
-                echo "setting up containers for verification..."
-                sh 'docker compose up -d'
-                sh 'sleep 10'     // to give time for database to be ready
-                echo "Running integration tests..."
-                sh 'pip install requests'
-                sh 'python tests/test_api.py'
+                echo "Setting up containers..."
+                sh 'docker-compose up -d'
+                
+                // Use the app's retry logic instead of a long sleep
+                sh 'sleep 5' 
+                
+                echo "Running integration tests INSIDE the container..."
+                sh 'docker-compose exec -T app python tests/test_api.py'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy/Status') {
             steps {
-                echo "Verification complete. Application is running."
-                sh 'docker compose ps'
+                echo "Verification complete."
+                sh 'docker-compose ps'
             }
         }
     }
 
     post {
-        success {
-            echo "Pipeline completed successfully. All tests passed."
-        }
-        failure {
-            echo "Pipeline failed. Check the stage logs above for details."
-        }
         always {
             echo "Cleaning up environment..."
-            sh 'docker compose down -v || true'
+            sh 'docker-compose down -v || true'
         }
     }
 }

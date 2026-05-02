@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Database connection config from environment variables
 DB_HOST = os.getenv('DB_HOST', 'db')
 DB_NAME = os.getenv('DB_NAME', 'tasks_db')
-DB_USER = os.getenv('DB_USER', 'postgres')
+DB_USER = os.getenv('DB_USER', 'admin')
 DB_PASS = os.getenv('DB_PASS', 'password')
 
 def get_db_connection():
