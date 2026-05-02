@@ -26,9 +26,10 @@ pipeline {
                 sh 'docker-compose up -d'
                 
                 // Use the app's retry logic instead of a long sleep
-                sh 'sleep 5' 
+                echo "Waiting for Flask to initialize..."
+                sh 'sleep 20'
                 
-                echo "Running integration tests INSIDE the container..."
+                echo "Running integration tests..."
                 sh 'docker-compose exec -T app python tests/test_api.py'
             }
         }
