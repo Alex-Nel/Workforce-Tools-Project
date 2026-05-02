@@ -17,24 +17,36 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building Docker images..."
-                // Use --no-cache to ensure a clean build for the final submission
                 sh 'docker-compose build --no-cache'
             }
         }
 
         stage('Verify') {
             steps {
-                echo "Launching containers for verification..."
+                echo "setting up containers for verification..."
                 sh 'docker-compose up -d'
-                
-                sh 'sleep 10'
-                
-                echo "Containers are live. Ready for Part 3 tests."
+                sh 'sleep 10'     // to give time for database to be ready
+                echo "Running integration tests..."
+                sh 'pip install requests'
+                sh 'python tests/test_api.py'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Verification complete. Application is running."
+                sh 'docker-compose ps'
             }
         }
     }
 
     post {
+        success {
+            echo "Pipeline completed successfully. All tests passed."
+        }
+        failure {
+            echo "Pipeline failed. Check the stage logs above for details."
+        }
         always {
             echo "Cleaning up environment..."
             sh 'docker-compose down -v'
