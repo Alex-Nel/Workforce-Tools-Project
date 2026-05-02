@@ -2,35 +2,42 @@ pipeline {
     agent any
 
     environment {
-        // Define your Docker Hub or local image name
-        IMAGE_NAME = "my-task-api"
+        IMAGE_NAME = "task-management-api"
+        DB_PASSWORD = credentials('db-secret-password')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // This pulls the code from the repo that triggered the build
                 checkout scm
-                echo "Successfully pulled code from GitHub."
+                echo "Code pulled successfully."
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building application with Docker Compose..."
-                // Build the services defined in docker-compose.yml
-                sh 'docker-compose build'
+                echo "Building Docker images..."
+                // Use --no-cache to ensure a clean build for the final submission
+                sh 'docker-compose build --no-cache'
             }
         }
 
         stage('Verify') {
             steps {
-                echo "Running integration tests..."
-                // We'll add actual test commands here in Part 2
+                echo "Launching containers for verification..."
                 sh 'docker-compose up -d'
-                // Add a health check or simple curl here
-                sh 'docker-compose down'
+                
+                sh 'sleep 10'
+                
+                echo "Containers are live. Ready for Part 3 tests."
             }
+        }
+    }
+
+    post {
+        always {
+            echo "Cleaning up environment..."
+            sh 'docker-compose down -v'
         }
     }
 }
