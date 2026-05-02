@@ -13,17 +13,21 @@ DB_PASS = os.getenv('DB_PASS', 'password')
 
 def get_db_connection():
     # Simple retry mechanism for the database container startup
+    retries = 10
     conn = None
-    while not conn:
+    while retries > 0:
         try:
             conn = psycopg2.connect(
                 host=DB_HOST, database=DB_NAME,
                 user=DB_USER, password=DB_PASS
             )
-        except:
-            print("Database not ready, retrying in 2 seconds...")
+            return conn
+        except psycopg2.OperationalError as e:
+            retries -= 1
+            print(f"Database not ready ({e}). Retrying in 2s... ({retries} left)")
             time.sleep(2)
-    return conn
+    print("Could not connect to database. Exiting.")
+    exit(1)
 
 # Create table if it doesn't exist (Simple for prototype)
 conn = get_db_connection()
