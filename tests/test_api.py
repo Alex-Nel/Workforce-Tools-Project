@@ -5,13 +5,13 @@ BASE_URL = "http://localhost:5000/tasks"
 
 def test_create_task():
     """POST a new task and verify it returns 201 with the data."""
-    r = requests.post(BASE_URL, json={"name": "integration test task"})
+    r = requests.post(BASE_URL, json={"name": "Integration Test Task"})
     if r.status_code != 201:
         print(f"FAIL - POST returned {r.status_code}: {r.text}")
         sys.exit(1)
 
     data = r.json()
-    if data.get("name") != "integration test task":
+    if data.get("name") != "Integration Test Task":
         print(f"FAIL - POST response not expected name: {data}")
         sys.exit(1)
 
