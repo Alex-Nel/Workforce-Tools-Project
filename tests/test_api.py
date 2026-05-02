@@ -1,7 +1,7 @@
 import requests
 import sys
 
-BASE_URL = "http://localhost:5000/tasks"
+BASE_URL = "http://127.0.0.1:5000/tasks"
 
 def test_create_task():
     """POST a new task and verify it returns 201 with the data."""
