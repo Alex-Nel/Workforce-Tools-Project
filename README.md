@@ -94,13 +94,3 @@ The test suite performs all API tests in test_api: creates a task, reads it back
 | **Deploy** | Confirms the application is running and displays container status |
 | **Teardown** (post) | Stops all containers and removes volumes regardless of pipeline outcome |
 
-## Demo Screenshots
-
-enter screenshots here
-
-<!-- add screenshots here:
-- Jenkins pipeline with all stages passing
-- API responses (POST, GET, DELETE) using curl 
-- docker-compose ps showing running containers
-- integration test output showing all tests passed
--->
