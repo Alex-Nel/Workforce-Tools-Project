@@ -4,7 +4,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-tests/
 Dockerfile
 docker-compose.yml
 Jenkinsfile
