@@ -1,0 +1,13 @@
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+tests/
+Dockerfile
+docker-compose.yml
+Jenkinsfile
+.dockerignore
+README.md
+.DS_Store
